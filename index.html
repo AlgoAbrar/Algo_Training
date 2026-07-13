@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#0B0D0E">
+<title>AlgoAbrar Tracker — PPL Fight Camp</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%230B0D0E%22/><text x=%2250%22 y=%2268%22 font-size=%2250%22 text-anchor=%22middle%22 fill=%22%23C4402A%22 font-family=%22Georgia%22>AA</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-noise min-h-screen pb-24">
+
+<!-- TOP BAR -->
+<header class="sticky top-0 z-40 bg-[#0B0D0E]/95 backdrop-blur border-b border-[var(--line)]">
+  <div class="tape"></div>
+  <div class="max-w-md mx-auto px-4 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-md flex items-center justify-center font-display text-sm" style="background:var(--ember);color:var(--bone);">AA</div>
+      <div>
+        <div class="font-display text-lg leading-none tracking-wide">ALGOABRAR</div>
+        <div class="text-[10px] font-mono text-[var(--bone-dim)] tracking-widest">PPL FIGHT CAMP</div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1 text-[var(--brass)]" title="Current Streak">
+        <svg class="flame" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c1 3-2 4-2 7a4 4 0 008 0c0-1-.5-2-1-3 2 1 4 4 4 7a7 7 0 11-14 0c0-4 2-7 5-11z"/></svg>
+        <span id="topbar-streak" class="font-mono text-sm font-semibold">0</span>
+      </div>
+      <button id="btn-settings" class="w-9 h-9 flex items-center justify-center rounded-full btn-ghost" aria-label="Settings">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9c.24.4.6.7 1.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="max-w-md mx-auto px-4 pt-5">
+
+  <!-- ============ DASHBOARD ============ -->
+  <section id="page-dashboard" class="page">
+
+    <div class="card p-4 relative overflow-hidden">
+      <div class="absolute -right-6 -top-6 w-28 h-28 rounded-full" style="background:radial-gradient(circle, rgba(201,162,75,0.12), transparent 70%);"></div>
+      <div class="flex items-center gap-4">
+        <button id="btn-avatar" class="stamp badge-ring w-20 h-20 flex items-center justify-center flex-shrink-0" style="color:var(--brass);">
+          <span id="avatar-initial" class="font-display text-3xl" style="color:var(--bone);">F</span>
+        </button>
+        <div class="min-w-0 flex-1">
+          <button id="btn-rename" class="font-display text-2xl leading-none truncate block text-left">
+            <span id="profile-name">FIGHTER</span>
+          </button>
+          <div class="mt-1 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-mono font-semibold tracking-wide" id="rank-pill">
+            <span id="rank-name">ROOKIE FIGHTER</span>
+          </div>
+        </div>
+        <div class="text-right flex-shrink-0">
+          <div class="text-[10px] font-mono text-[var(--bone-dim)] tracking-widest">LEVEL</div>
+          <div id="level-number" class="font-display text-4xl leading-none" style="color:var(--ember-2);">1</div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <div class="flex justify-between items-baseline mb-1">
+          <span class="text-[10px] font-mono text-[var(--bone-dim)] tracking-widest">XP TO NEXT LEVEL</span>
+          <span id="xp-label" class="text-[11px] font-mono text-[var(--bone-dim)]">0 / 100</span>
+        </div>
+        <div class="xp-track">
+          <div id="xp-fill" class="xp-fill" style="width:0%;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tape-thin my-4 rounded-full"></div>
+
+    <div class="card p-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-1">TALE OF THE TAPE</div>
+      <div class="stat-row">
+        <span class="text-sm text-[var(--bone-dim)]">Current Streak</span>
+        <span class="font-mono text-lg font-semibold" style="color:var(--ember-2);"><span id="stat-streak">0</span> <span class="text-xs text-[var(--bone-dim)]">days</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="text-sm text-[var(--bone-dim)]">Longest Streak</span>
+        <span class="font-mono text-lg font-semibold"><span id="stat-longest">0</span> <span class="text-xs text-[var(--bone-dim)]">days</span></span>
+      </div>
+      <div class="stat-row">
+        <span class="text-sm text-[var(--bone-dim)]">Total Workouts</span>
+        <span class="font-mono text-lg font-semibold" id="stat-workouts">0</span>
+      </div>
+      <div class="stat-row">
+        <span class="text-sm text-[var(--bone-dim)]">Total XP Earned</span>
+        <span class="font-mono text-lg font-semibold" style="color:var(--brass);" id="stat-totalxp">0</span>
+      </div>
+    </div>
+
+    <div class="tape-thin my-4 rounded-full"></div>
+
+    <div>
+      <div class="flex items-center justify-between mb-2 px-1">
+        <h2 class="font-display text-lg tracking-wide">FIGHT WEEK</h2>
+        <span class="text-[10px] font-mono text-[var(--bone-dim)]">TAP A DAY</span>
+      </div>
+      <div id="weekly-schedule" class="grid grid-cols-4 gap-2.5"></div>
+    </div>
+
+    <div class="h-6"></div>
+  </section>
+
+  <!-- ============ WORKOUT LOGGER ============ -->
+  <section id="page-workout" class="page hidden">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-display text-2xl tracking-wide">TRAIN</h2>
+      <select id="day-select" class="font-mono text-sm px-3 py-2"></select>
+    </div>
+
+    <div id="workout-header" class="card p-4 mb-4 flex items-center justify-between">
+      <div>
+        <div class="text-[10px] font-mono tracking-widest text-[var(--bone-dim)]" id="workout-type-label">PUSH A</div>
+        <div class="font-display text-xl" id="workout-day-label">Monday</div>
+        <div class="text-[11px] text-[var(--bone-dim)] mt-0.5" id="workout-goal-label">Upper body pushing strength</div>
+      </div>
+      <div class="text-right">
+        <div class="text-[10px] font-mono tracking-widest text-[var(--bone-dim)]">SESSION XP</div>
+        <div class="font-display text-2xl" style="color:var(--brass);" id="session-xp">+0</div>
+      </div>
+    </div>
+
+    <details class="card p-3.5 mb-4">
+      <summary class="font-display text-sm tracking-wide cursor-pointer flex items-center justify-between">
+        <span>DAILY STRUCTURE — DON'T SKIP THESE</span>
+        <span class="text-[var(--bone-dim)] text-xs">tap</span>
+      </summary>
+      <div id="daily-structure-list" class="mt-3 space-y-2.5"></div>
+    </details>
+
+    <div id="exercise-list" class="space-y-3"></div>
+
+    <button id="btn-complete-workout" class="btn-primary w-full mt-5 py-3.5 rounded-xl font-display text-lg tracking-wide">
+      COMPLETE WORKOUT
+    </button>
+    <div class="h-6"></div>
+  </section>
+
+  <!-- ============ PROGRESS ============ -->
+  <section id="page-progress" class="page hidden">
+    <h2 class="font-display text-2xl tracking-wide mb-3">PROGRESS</h2>
+
+    <div class="card p-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-2">FIGHTER STATS</div>
+      <div style="height:260px;"><canvas id="radar-chart"></canvas></div>
+    </div>
+
+    <div class="tape-thin my-4 rounded-full"></div>
+
+    <div class="card p-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-3">LOG MEASUREMENTS</div>
+      <form id="measurement-form" class="grid grid-cols-2 gap-3">
+        <label class="text-xs col-span-2">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">WEIGHT (KG)</span>
+          <input type="number" step="0.1" name="weight" placeholder="0.0" class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <label class="text-xs">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">BODY FAT %</span>
+          <input type="number" step="0.1" name="bodyFat" placeholder="0.0" class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <label class="text-xs">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">CHEST (CM)</span>
+          <input type="number" step="0.1" name="chest" placeholder="0.0" class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <label class="text-xs">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">WAIST (CM)</span>
+          <input type="number" step="0.1" name="waist" placeholder="0.0" class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <label class="text-xs">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">ARMS (CM)</span>
+          <input type="number" step="0.1" name="arms" placeholder="0.0" class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <label class="text-xs col-span-2">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">LEGS (CM)</span>
+          <input type="number" step="0.1" name="legs" placeholder="0.0" class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <button type="submit" class="btn-primary col-span-2 py-3 rounded-xl font-display tracking-wide mt-1">SAVE MEASUREMENT</button>
+      </form>
+    </div>
+
+    <div class="tape-thin my-4 rounded-full"></div>
+
+    <div>
+      <div class="flex items-center justify-between mb-2 px-1">
+        <h3 class="font-display text-lg tracking-wide">LATEST READING</h3>
+      </div>
+      <div id="latest-measurement" class="card p-4 text-sm text-[var(--bone-dim)]">No measurements logged yet.</div>
+    </div>
+
+    <div class="mt-4">
+      <div class="flex items-center justify-between mb-2 px-1">
+        <h3 class="font-display text-lg tracking-wide">HISTORY</h3>
+      </div>
+      <div id="measurement-history" class="space-y-2"></div>
+    </div>
+
+    <div class="h-6"></div>
+  </section>
+
+  <!-- ============ PLAN (nutrition / kegel / recovery) ============ -->
+  <section id="page-plan" class="page hidden">
+    <h2 class="font-display text-2xl tracking-wide mb-3">PLAN</h2>
+
+    <div class="card p-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-3">BODY STATS</div>
+      <form id="body-stats-form" class="grid grid-cols-3 gap-2.5">
+        <label class="text-xs">
+          <span class="text-[var(--bone-dim)] font-mono text-[9px] tracking-widest">HEIGHT (CM)</span>
+          <input type="number" step="1" name="heightCm" class="w-full mt-1 px-2 py-2 text-sm">
+        </label>
+        <label class="text-xs">
+          <span class="text-[var(--bone-dim)] font-mono text-[9px] tracking-widest">WEIGHT (KG)</span>
+          <input type="number" step="0.1" name="weightKg" class="w-full mt-1 px-2 py-2 text-sm">
+        </label>
+        <label class="text-xs">
+          <span class="text-[var(--bone-dim)] font-mono text-[9px] tracking-widest">AGE</span>
+          <input type="number" step="1" name="age" class="w-full mt-1 px-2 py-2 text-sm">
+        </label>
+        <button type="submit" class="btn-primary col-span-3 py-2.5 rounded-xl font-display tracking-wide text-sm mt-1">RECALCULATE TARGETS</button>
+      </form>
+      <p class="text-[10px] text-[var(--bone-dim)] mt-2 leading-relaxed">Mifflin-St Jeor formula, activity factor 1.725 (6 days/week training), 750 kcal daily deficit for steady fat loss. Updates automatically when you log a new weight in Progress.</p>
+    </div>
+
+    <div class="tape-thin my-4 rounded-full"></div>
+
+    <div class="card p-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-3">DAILY NUTRITION TARGET</div>
+      <div class="text-center mb-4">
+        <div class="font-display text-5xl" style="color:var(--brass);" id="nutrition-target">2860</div>
+        <div class="text-[10px] font-mono text-[var(--bone-dim)] tracking-widest mt-1">KCAL / DAY</div>
+      </div>
+      <div class="grid grid-cols-3 gap-2 text-center">
+        <div class="card p-2.5">
+          <div class="text-[9px] font-mono text-[var(--bone-dim)] tracking-widest">PROTEIN</div>
+          <div class="font-display text-lg" id="nutrition-protein">220g</div>
+        </div>
+        <div class="card p-2.5">
+          <div class="text-[9px] font-mono text-[var(--bone-dim)] tracking-widest">FAT</div>
+          <div class="font-display text-lg" id="nutrition-fat">80g</div>
+        </div>
+        <div class="card p-2.5">
+          <div class="text-[9px] font-mono text-[var(--bone-dim)] tracking-widest">CARBS</div>
+          <div class="font-display text-lg" id="nutrition-carbs">315g</div>
+        </div>
+      </div>
+      <div class="stat-row mt-2">
+        <span class="text-xs text-[var(--bone-dim)]">BMR</span>
+        <span class="font-mono text-sm" id="nutrition-bmr">2093 kcal</span>
+      </div>
+      <div class="stat-row">
+        <span class="text-xs text-[var(--bone-dim)]">TDEE</span>
+        <span class="font-mono text-sm" id="nutrition-tdee">3610 kcal</span>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-2 px-1">NUTRITION TIPS</div>
+      <div id="nutrition-tips-list" class="space-y-2"></div>
+    </div>
+
+    <div class="tape-thin my-4 rounded-full"></div>
+
+    <div class="card p-4">
+      <div class="flex items-center justify-between mb-2">
+        <div class="font-display text-sm tracking-widest text-[var(--bone-dim)]">PELVIC FLOOR (KEGEL)</div>
+        <span class="text-[9px] font-mono text-[var(--brass)]">+10 XP/DAY</span>
+      </div>
+      <p class="text-xs text-[var(--bone-dim)] mb-3 leading-relaxed">3 sets of 10-15 reps daily. Contract for 5 seconds, relax for 5 seconds. Do it anywhere — desk, car, between sets.</p>
+      <button id="btn-log-kegel" class="btn-primary w-full py-3 rounded-xl font-display tracking-wide">LOG TODAY'S SET</button>
+    </div>
+
+    <div class="tape-thin my-4 rounded-full"></div>
+
+    <div>
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-2 px-1">FLEXIBILITY FOCUS AREAS</div>
+      <div id="flexibility-list" class="space-y-2"></div>
+    </div>
+
+    <div class="mt-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-2 px-1">RECOVERY & LIFESTYLE</div>
+      <div id="recovery-tips-list" class="space-y-2"></div>
+    </div>
+
+    <div class="h-6"></div>
+  </section>
+
+  <!-- ============ VIDEOS ============ -->
+  <section id="page-videos" class="page hidden">
+    <h2 class="font-display text-2xl tracking-wide mb-3">FIGHT TAPE</h2>
+
+    <div class="card p-4">
+      <div class="font-display text-sm tracking-widest text-[var(--bone-dim)] mb-3">ADD FOOTAGE</div>
+      <form id="video-form" class="space-y-3">
+        <label class="text-xs block">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">YOUTUBE URL</span>
+          <input type="url" name="url" required placeholder="https://youtube.com/watch?v=..." class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <label class="text-xs block">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">TITLE</span>
+          <input type="text" name="title" required placeholder="e.g. Southpaw jab-cross drill" class="w-full mt-1 px-3 py-2 text-sm">
+        </label>
+        <label class="text-xs block">
+          <span class="text-[var(--bone-dim)] font-mono text-[10px] tracking-widest">NOTES (OPTIONAL)</span>
+          <textarea name="notes" rows="2" placeholder="What to focus on..." class="w-full mt-1 px-3 py-2 text-sm"></textarea>
+        </label>
+        <button type="submit" class="btn-primary w-full py-3 rounded-xl font-display tracking-wide">ADD TO LIBRARY</button>
+      </form>
+    </div>
+
+    <div class="mt-5">
+      <div id="video-list" class="space-y-3"></div>
+    </div>
+    <div class="h-6"></div>
+  </section>
+
+</main>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#0B0D0E]/95 backdrop-blur border-t border-[var(--line)]">
+  <div class="max-w-md mx-auto grid grid-cols-5">
+    <button data-page="dashboard" class="nav-btn active flex flex-col items-center gap-1 py-2.5">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
+      <span class="text-[9px] font-mono tracking-wide">HOME</span>
+    </button>
+    <button data-page="workout" class="nav-btn flex flex-col items-center gap-1 py-2.5">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6.5 6.5l11 11M4 4l3 3m10 10l3 3M2.5 8.5l3-3 4 4-3 3-4-4zm9 9l3-3 4 4-3 3-4-4z"/></svg>
+      <span class="text-[9px] font-mono tracking-wide">TRAIN</span>
+    </button>
+    <button data-page="progress" class="nav-btn flex flex-col items-center gap-1 py-2.5">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg>
+      <span class="text-[9px] font-mono tracking-wide">PROGRESS</span>
+    </button>
+    <button data-page="plan" class="nav-btn flex flex-col items-center gap-1 py-2.5">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      <span class="text-[9px] font-mono tracking-wide">PLAN</span>
+    </button>
+    <button data-page="videos" class="nav-btn flex flex-col items-center gap-1 py-2.5">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="5" width="14" height="14" rx="2"/><path d="M21.5 8l-5 4 5 4V8z"/></svg>
+      <span class="text-[9px] font-mono tracking-wide">TAPE</span>
+    </button>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div id="toast-container" class="fixed top-16 left-0 right-0 z-50 flex flex-col items-center gap-2 px-4 pointer-events-none"></div>
+
+<!-- LEVEL UP MODAL -->
+<div id="modal-levelup" class="modal-backdrop hidden">
+  <div class="scale-in card p-6 max-w-xs w-full text-center relative overflow-hidden">
+    <div class="tape absolute top-0 left-0 right-0"></div>
+    <div class="mt-3 text-[11px] font-mono tracking-[0.3em] text-[var(--brass)]">LEVEL UP</div>
+    <div class="font-display text-6xl my-2" style="color:var(--ember-2);" id="levelup-number">2</div>
+    <div class="stamp w-20 h-20 mx-auto flex items-center justify-center my-3" style="color:var(--brass);">
+      <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 21 12 17l-5.5 4L8 13.5 3 9l6.5-.5z"/></svg>
+    </div>
+    <div id="levelup-rank" class="font-display text-xl tracking-wide">CAGE WARRIOR</div>
+    <p class="text-xs text-[var(--bone-dim)] mt-2">New rank unlocked. Keep grinding, champ.</p>
+    <button id="btn-levelup-close" class="btn-primary w-full mt-5 py-3 rounded-xl font-display tracking-wide">BACK TO CAMP</button>
+  </div>
+</div>
+
+<!-- SETTINGS / BACKUP MODAL -->
+<div id="modal-settings" class="modal-backdrop hidden">
+  <div class="scale-in card p-5 max-w-xs w-full relative">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display text-xl tracking-wide">SETTINGS</h3>
+      <button id="btn-close-settings" class="text-[var(--bone-dim)] text-2xl leading-none">&times;</button>
+    </div>
+    <div class="space-y-3">
+      <button id="btn-export" class="btn-ghost w-full py-3 rounded-xl font-mono text-sm flex items-center justify-center gap-2">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v3a2 2 0 002 2h12a2 2 0 002-2v-3"/></svg>
+        DOWNLOAD BACKUP
+      </button>
+      <label class="btn-ghost w-full py-3 rounded-xl font-mono text-sm flex items-center justify-center gap-2 cursor-pointer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21V9m0 0l-4 4m4-4l4 4"/><path d="M4 7V4a2 2 0 012-2h12a2 2 0 012 2v3"/></svg>
+        RESTORE BACKUP
+        <input id="input-import" type="file" accept="application/json" class="hidden">
+      </label>
+      <button id="btn-reset" class="w-full py-3 rounded-xl font-mono text-sm text-[var(--ember-2)] border border-[var(--ember)]/40" style="background:rgba(196,64,42,0.08);">
+        RESET ALL DATA
+      </button>
+    </div>
+    <p class="text-[10px] text-[var(--bone-dim)] mt-4 leading-relaxed">Everything is stored only on this device. Download a backup file now and then to keep your progress safe.</p>
+  </div>
+</div>
+
+<!-- RENAME MODAL -->
+<div id="modal-rename" class="modal-backdrop hidden">
+  <div class="scale-in card p-5 max-w-xs w-full">
+    <h3 class="font-display text-xl tracking-wide mb-3">FIGHTER NAME</h3>
+    <input id="input-rename" type="text" maxlength="16" class="w-full px-3 py-2 text-sm mb-4" placeholder="Enter name">
+    <div class="flex gap-2">
+      <button id="btn-cancel-rename" class="btn-ghost flex-1 py-2.5 rounded-xl font-mono text-sm">CANCEL</button>
+      <button id="btn-save-rename" class="btn-primary flex-1 py-2.5 rounded-xl font-mono text-sm">SAVE</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
