@@ -1,16 +1,4 @@
-/* =========================================================
-   AlgoAbrar Tracker — data.js
-   Your real program: 6-day PPL (A/B split) + Sunday active
-   recovery, sourced from your MMA PPL Workout Plan doc.
-   Pure data + logic only — no DOM access happens here.
-========================================================= */
-
 const STORAGE_KEY = 'algoabrar_tracker_v2';
-
-/* ---------------- Workout Plan ---------------- */
-/* Push A (Mon) and Push B (Thu) use the identical exercise list from
-   your plan (same for Pull A/B and Legs A/B) — only the stated goal
-   differs. Sunday is Active Recovery, not a lifting day. */
 
 const PUSH_EXERCISES = [
   { id: 'push-1', name: 'Smith Machine Incline Press', sets: 4, reps: '8-12', formCues: 'Bench at 30-45°, bar over upper chest, elbows tucked ~45°, press up explosively without locking out. Slight arch in lower back.' },
@@ -63,9 +51,6 @@ const workoutPlan = {
 
 const DAY_ORDER = [ 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'];
 
-/* Fixed structure that applies to every lifting day (Mon-Sat), from the
-   "Daily Routine Structure" section of your plan. Shown as reminders,
-   not counted toward XP. */
 const DAILY_STRUCTURE = [
   { title: 'Dynamic Warm-up', duration: '5-10 min', detail: '5 min light cardio (treadmill/bike) to raise heart rate, then arm circles, torso twists, leg swings, hip rotations.' },
   { title: 'Resistance Training', duration: '45-60 min', detail: 'The lifts below. Mind-muscle connection, controlled eccentrics, rest 60-90s between sets.' },
@@ -94,8 +79,6 @@ const RECOVERY_TIPS = [
   'Sharp pain is not the same as soreness. If something feels wrong, take an extra rest day.',
 ];
 
-/* ---------------- Rank System ---------------- */
-
 const rankSystem = [
   { minLevel: 1,   maxLevel: 4,   name: 'Rookie Fighter',    color: '#8B8D93' },
   { minLevel: 5,   maxLevel: 9,   name: 'Cage Warrior',      color: '#5B7FA6' },
@@ -116,17 +99,13 @@ function getRankForLevel(level) {
   return rankSystem.find(tier => level >= tier.minLevel && level <= tier.maxLevel) || rankSystem[0];
 }
 
-/* ---------------- XP Math ---------------- */
-
-const XP_PER_EXERCISE = 50;
-const XP_COMPLETION_BONUS = 50;
-const XP_KEGEL_BONUS = 10;
+const XP_PER_EXERCISE = 5;
+const XP_COMPLETION_BONUS = 10;
+const XP_KEGEL_BONUS = 5;
 
 function getXpRequiredForLevel(level) {
   return Math.round(100 * Math.pow(1.1, level - 1));
 }
-
-/* ---------------- Date helpers ---------------- */
 
 function todayStr() {
   const d = new Date();
@@ -146,13 +125,6 @@ function todaysWorkoutDay() {
   const map = { 0: 'sunday', 1: 'monday', 2: 'tuesday', 3: 'wednesday', 4: 'thursday', 5: 'friday', 6: 'saturday' };
   return map[new Date().getDay()];
 }
-
-/* ---------------- Nutrition math ---------------- */
-/* Mifflin-St Jeor (male), matching the calculation method in your plan:
-   BMR = 10*kg + 6.25*cm - 5*age + 5
-   TDEE = BMR * activity factor (1.725 = very active / 6 days training)
-   Target = TDEE - deficit (750 kcal default, ~0.5-1kg/week loss)
-   Protein = 2.0g/kg, Fat = 25% of target calories, Carbs = remainder */
 
 function computeNutrition(heightCm, weightKg, age, activityFactor, deficit) {
   activityFactor = activityFactor || 1.725;
@@ -184,8 +156,6 @@ function computeNutrition(heightCm, weightKg, age, activityFactor, deficit) {
   };
 }
 
-/* ---------------- UserStats model ---------------- */
-
 class UserStats {
   constructor() {
     this.load();
@@ -193,10 +163,10 @@ class UserStats {
 
   defaults() {
     return {
-      name: 'Fighter',
+      name: 'Saiyedul Abrar',
       heightCm: 182,
       weightKg: 110,
-      age: 30,
+      age: 24,
       level: 1,
       totalXp: 0,
       currentXp: 0,
@@ -208,7 +178,7 @@ class UserStats {
       workoutHistory: [],
       progressHistory: [],
       videoLibrary: [],
-      inProgress: {}, // { [dayId]: [exerciseId, ...] }
+      inProgress: {}, 
     };
   }
 
@@ -247,15 +217,15 @@ class UserStats {
   addXp(amount) {
     this.totalXp += amount;
     let levelsGained = 0;
-    if (this.level < 100) {
+    if (this.level < 300) {
       this.currentXp += amount;
-      while (this.level < 100 && this.currentXp >= getXpRequiredForLevel(this.level)) {
+      while (this.level < 300 && this.currentXp >= getXpRequiredForLevel(this.level)) {
         this.currentXp -= getXpRequiredForLevel(this.level);
         this.level += 1;
         levelsGained += 1;
       }
-      if (this.level >= 100) {
-        this.level = 100;
+      if (this.level >= 300) {
+        this.level = 300;
         this.currentXp = 0;
       }
     }
