@@ -67,15 +67,11 @@ function renderDashboard() {
 
   $('level-number').textContent = userStats.level;
 
-  // const need = userStats.level >= 100 ? 0 : getXpRequiredForLevel(userStats.level);
-  // $('xp-label').textContent = userStats.level >= 100 ? 'MAX LEVEL' : `${userStats.currentXp} / ${need}`;
-  // const pct = userStats.level >= 100 ? 100 : Math.min(100, (userStats.currentXp / need) * 100);
-  // $('xp-fill').style.width = pct + '%';
-  const need = userStats.level >= 300 ? 0 : getXpRequiredForLevel(userStats.level);
-  $('xp-label').textContent = userStats.level >= 300 ? 'MAX LEVEL' : `${userStats.currentXp} / ${need}`;
-  const pct = userStats.level >= 300 ? 100 : Math.min(100, (userStats.currentXp / need) * 100);
+  const need = userStats.level >= 100 ? 0 : getXpRequiredForLevel(userStats.level);
+  $('xp-label').textContent = userStats.level >= 100 ? 'MAX LEVEL' : `${userStats.currentXp} / ${need}`;
+  const pct = userStats.level >= 100 ? 100 : Math.min(100, (userStats.currentXp / need) * 100);
   $('xp-fill').style.width = pct + '%';
-
+  
   $('topbar-streak').textContent = userStats.currentStreak;
   $('stat-streak').textContent = userStats.currentStreak;
   $('stat-longest').textContent = userStats.longestStreak;
